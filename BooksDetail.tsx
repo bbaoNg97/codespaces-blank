@@ -1,30 +1,36 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { StyleSheet, Text, View, Image, Alert } from "react-native";
+import { useSelector, useDispatch } from "react-redux";
 import { getBookDetail } from "./booksApi";
+import { getBookDetailDone, getBookDetailError } from "./bookSlice";
 
 interface BookDetailProps {
-  route: {
-    params: {
-      id: string;
-    };
-  };
+  book: book.Book;
 }
 
 const BooksDetail = (props: BookDetailProps): JSX.Element => {
-  const books = useSelector((state) => state.books);
-  const [bookDetail, setbookDetail] = useState<BookDetail>(undefined);
+  const selectedBookId = useSelector((state) => state.selectedBookId);
+  const selectedBook = useSelector((state) => state.selectedBook);
+
+  const dispatch = useDispatch();
+
   useEffect(async () => {
-    let response = await getBookDetail(props.route.params.id);
-    setbookDetail(response);
+    dispatch(getBookDetail(selectedBookId));
+    try {
+      let response = await getBookDetail(selectedBookId);
+      dispatch(getBookDetailDone(response));
+    } catch (e) {
+      dispatch(getBookDetailError());
+      Alert.alert("Fetch books failed with error: ", e);
+    }
   }, []);
 
   return (
     <View style={styles.screen}>
-      <Text>{bookDetail.title}</Text>
-      <Text>{bookDetail.author}</Text>
-      <Image src={bookDetail.coverImage} style={styles.image} />
-      <Text>{bookDetail.description}</Text>
+      <Text>{selectedBook.title}</Text>
+      <Text>{selectedBook.author}</Text>
+      <Image src={selectedBook.coverImage} style={styles.image} />
+      <Text>{selectedBook.description}</Text>
     </View>
   );
 };

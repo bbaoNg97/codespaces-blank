@@ -5,40 +5,63 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector, useDispatch } from "react-redux";
-import { getBooks } from "./booksApi";
-import { updateFavourite } from "./bookSlice";
-
+import {
+  getBooksDone,
+  getBooksError,
+  selectBook,
+  updateFavourite,
+} from "./bookSlice";
+import Icon from "react-native-vector-icons/FontAwesome";
 interface BookItemProps {
-  book: Book;
+  book: book.Book;
 }
 
 const BooksScreen = (): JSX.Element => {
   const books = useSelector((state) => state.books);
   const dispatch = useDispatch();
   const navigation = useNavigation();
+
   useEffect(() => {
     getBooks();
   }, []);
 
-  const changeFavourite = (id, favourite) => {
-    dispatch(updateFavourite({ id, favourite }));
-  };
+  async function getBooks() {
+    dispatch(getBooks());
+    try {
+      const response = await fetch("https://example.com/api/books");
+      const books: book.Book[] = await response.json();
+      dispatch(getBooksDone(books));
+    } catch (e) {
+      dispatch(getBooksError());
+      Alert.alert("Fetch books failed with error: ", e);
+    }
+  }
 
   const BookItem = ({ book }: BookItemProps) => {
     return (
       <View>
         <TouchableOpacity
-          onPress={() => navigation.navigate("BooksDetail", { id: book.id })}
+          onPress={() => {
+            dispatch(selectBook(book.id));
+            navigation.navigate("BooksDetail");
+          }}
         >
           <Text>{book.title}</Text>
           <Text>Favourite:</Text>
           <TouchableOpacity
-            onPress={() => changeFavourite(book.id, !book.isFavourited)}
+            onPress={() =>
+              dispatch(updateFavourite(book.id, book.isFavourited))
+            }
           >
-            <Text>{book.isFavourited ? "Yes" : "No"}</Text>
+            <Icon
+              name="rocket"
+              size={30}
+              color={book.isFavourited ? Colors.yellow : Colors.gray}
+            />
           </TouchableOpacity>
         </TouchableOpacity>
       </View>
