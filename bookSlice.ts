@@ -21,7 +21,6 @@ const bookSlice = createSlice({
     getBooksError: (state: book.State) => {
       state.isLoading = false;
     },
-
     getBookDetail: (state: book.State, action: PayloadAction<book.State>) => {
       state.isLoading = true;
     },
@@ -35,10 +34,10 @@ const bookSlice = createSlice({
     getBookDetailError: (state: book.State) => {
       state.isLoading = false;
     },
-    selectBook(state: book.State, action: PayloadAction<book.State>) {
+    selectBook: (state: book.State, action: PayloadAction<book.State>) => {
       state.selectedBookId = action.payload;
     },
-    updateFavourite(state, action) {
+    updateFavourite: (state, action) => {
       const book = state.find((books) => books.id === action.payload.id);
       if (book) {
         book.isFavourited = action.payload.favourite;
