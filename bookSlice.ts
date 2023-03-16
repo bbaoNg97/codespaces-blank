@@ -35,7 +35,7 @@ const bookSlice = createSlice({
     getBookDetailError: (state: book.State) => {
       state.isLoading = false;
     },
-    selectBook(state, action: PayloadAction<book.State>) {
+    selectBook(state: book.State, action: PayloadAction<book.State>) {
       state.selectedBookId = action.payload;
     },
     updateFavourite(state, action) {
