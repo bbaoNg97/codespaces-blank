@@ -4,11 +4,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { getBookDetail } from "./booksApi";
 import { getBookDetailDone, getBookDetailError } from "./bookSlice";
 
-interface BookDetailProps {
+interface BookDetailScreenProps {
   book: book.Book;
 }
 
-const BooksDetail = (props: BookDetailProps): JSX.Element => {
+const BookDetailScreen = (props: BookDetailScreenProps): JSX.Element => {
   const selectedBookId = useSelector((state) => state.selectedBookId);
   const selectedBook = useSelector((state) => state.selectedBook);
 
@@ -35,8 +35,7 @@ const BooksDetail = (props: BookDetailProps): JSX.Element => {
   );
 };
 
-export default BooksDetail;
-
+export default BookDetailScreen;
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
