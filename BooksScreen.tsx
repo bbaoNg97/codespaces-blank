@@ -1,8 +1,15 @@
-import React, { useEffect } from 'react';
-import { Alert, FlatList, StyleSheet, Text, View } from 'react-native';
-
-import { setBooks } from '@core/services/bookSlice';
-import { useSelector } from 'react-redux'
+import React, { useEffect } from "react";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { useSelector, useDispatch } from "react-redux";
+import { getBooks } from "./booksApi";
+import { updateFavourite } from "./bookSlice";
 
 interface BookItemProps {
   book: Book;
@@ -10,28 +17,30 @@ interface BookItemProps {
 
 const BooksScreen = (): JSX.Element => {
   const books = useSelector((state) => state.books);
-
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
   useEffect(() => {
     getBooks();
   }, []);
 
-  async function getBooks() {
-    try {
-      const response = await fetch('https://example.com/api/books');
-      const books: Book[] = await response.json();
-      setBooks(books);
-    } catch (e) {
-      Alert.alert('Fetch books failed with error: ', e);
-    }
-  }
+  const changeFavourite = (id, favourite) => {
+    dispatch(updateFavourite({ id, favourite }));
+  };
 
   const BookItem = ({ book }: BookItemProps) => {
     return (
       <View>
-        <View>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("BooksDetail", { id: book.id })}
+        >
           <Text>{book.title}</Text>
-          <Text>{book.isFavourited}</Text>
-        </View>
+          <Text>Favourite:</Text>
+          <TouchableOpacity
+            onPress={() => changeFavourite(book.id, !book.isFavourited)}
+          >
+            <Text>{book.isFavourited ? "Yes" : "No"}</Text>
+          </TouchableOpacity>
+        </TouchableOpacity>
       </View>
     );
   };
@@ -52,7 +61,7 @@ export default BooksScreen;
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
