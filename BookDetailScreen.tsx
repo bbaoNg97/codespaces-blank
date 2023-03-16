@@ -12,15 +12,13 @@ const BookDetailScreen = (props: BookDetailScreenProps): JSX.Element => {
   const selectedBookId = useSelector((state) => state.selectedBookId);
   const selectedBook = useSelector((state) => state.selectedBook);
 
-  const dispatch = useDispatch();
-
   useEffect(async () => {
-    dispatch(getBookDetail(selectedBookId));
+    getBookDetail(selectedBookId)
     try {
       let response = await getBookDetail(selectedBookId);
-      dispatch(getBookDetailDone(response));
+      getBookDetailDone(response)
     } catch (e) {
-      dispatch(getBookDetailError());
+      getBookDetailError()
       Alert.alert("Fetch books failed with error: ", e);
     }
   }, []);
