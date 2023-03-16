@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import { useSelector } from "react-redux";
 import { getBookDetail } from "./booksApi";
 
-interface BookDetatilProps {
+interface BookDetailProps {
   route: {
     params: {
       id: string;
@@ -11,7 +11,7 @@ interface BookDetatilProps {
   };
 }
 
-const BooksDetail = (props: BookDetatilProps): JSX.Element => {
+const BooksDetail = (props: BookDetailProps): JSX.Element => {
   const books = useSelector((state) => state.books);
   const [bookDetail, setbookDetail] = useState<BookDetail>(undefined);
   useEffect(async () => {
