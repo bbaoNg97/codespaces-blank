@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { StyleSheet, Text, View, Image, Alert } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { getBookDetail } from "./booksApi";
 import { getBookDetailDone, getBookDetailError } from "./bookSlice";
 
