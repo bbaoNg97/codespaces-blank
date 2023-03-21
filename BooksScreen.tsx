@@ -58,7 +58,7 @@ const BooksScreen = (): JSX.Element => {
             }
           >
             <Icon
-              name="rocket"
+              name="star"
               size={30}
               color={book.isFavourited ? Colors.yellow : Colors.gray}
             />
